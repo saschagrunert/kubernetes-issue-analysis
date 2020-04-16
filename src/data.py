@@ -110,11 +110,11 @@ class Data():
             i = int(item_id)
 
             # Issues are just stored as lists
-            if isinstance(item, list):
+            if isinstance(item, list) and i in self.__issues:
                 self.__issues[i].bag_of_words = BagOfWords(words=item)
 
             # PRs are stored as dictionaries
-            else:
+            elif i in self.__pull_requests:
                 if item[Data.BOW_ALL_KEY]:
                     bow = BagOfWords(words=item[Data.BOW_ALL_KEY])
                     self.__pull_requests[i].bag_of_words = bow
