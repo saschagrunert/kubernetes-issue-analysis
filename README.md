@@ -1,4 +1,4 @@
-# Kubernetes Issue Analysis [![CircleCI](https://circleci.com/gh/saschagrunert/kubernetes-analysis.svg?style=shield)](https://circleci.com/gh/saschagrunert/kubernetes-analysis)
+# Kubernetes Analysis [![CircleCI](https://circleci.com/gh/saschagrunert/kubernetes-analysis.svg?style=shield)](https://circleci.com/gh/saschagrunert/kubernetes-analysis)
 
 ### Kubernetes issue and pull request analysis powered by machine learning
 
