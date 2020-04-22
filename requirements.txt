@@ -4,3 +4,4 @@ matplotlib
 numpy
 pycairo
 sklearn
+tensorflow
