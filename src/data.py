@@ -53,7 +53,11 @@ class Data():
     def __init__(self, parse: bool = False, filter_value: Filter = Filter.ALL):
         if not parse:
             Data.__extract_data()
+
+            logger.info("Loading pickle dataset")
             self.__dict__.update(pickle.load(open(Data.PATH, "rb")))
+            self.__log_summary()
+
             self.__filter = filter_value
             return
 
@@ -90,6 +94,9 @@ class Data():
             except Exception as e:
                 logger.critical("Parsing failed: {}", e)
 
+        self.__log_summary()
+
+    def __log_summary(self):
         logger.info("Parsed {} issues and {} pull requests ({} items)",
                     len(self.__issues), len(self.__pull_requests),
                     len(self.__issues) + len(self.__pull_requests))
