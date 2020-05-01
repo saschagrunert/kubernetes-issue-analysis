@@ -1,6 +1,3 @@
-COMMIT := $(shell git rev-parse --short HEAD)
-PIPELINE ?= "kubernetes-analysis-$(COMMIT)"
-
 .PHONY: pipeline
 pipeline:
 	./main pipeline
@@ -8,16 +5,7 @@ pipeline:
 .PHONY: pipeline-run
 pipeline-run: pipeline
 	ci/tree-status
-	kfp run submit \
-		-e ci \
-		-f data/pipeline.yaml \
-		-r test-$$PULL_NUMBER-$(COMMIT) \
-		pr=$$PULL_NUMBER \
-		-w
-
-.PHONY: pipeline-delete
-pipeline-delete:
-	kfp pipeline delete $(call pipeline-id) || true
+	ci/run
 
 .PHONY: assets
 assets: \
