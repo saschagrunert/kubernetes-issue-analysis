@@ -1,0 +1,26 @@
+---
+prowjob_namespace: default
+pod_namespace: test-pods
+log_level: debug
+
+tide:
+  target_url: https://prow.k8s.saschagrunert.de/tide
+  queries:
+    - repos:
+        - saschagrunert/kubernetes-analysis
+      labels:
+        - approved
+        - lgtm
+      missingLabels:
+        - do-not-merge
+        - do-not-merge/hold
+        - do-not-merge/work-in-progress
+        - needs-ok-to-test
+        - needs-rebase
+  merge_method:
+    saschagrunert/kubernetes-analysis: squash
+
+github_reporter:
+  job_types_to_report:
+    - presubmit
+    - postsubmit

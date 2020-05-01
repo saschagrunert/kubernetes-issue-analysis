@@ -1,0 +1,10 @@
+---
+presubmits:
+  saschagrunert/kubernetes-analysis:
+    - name: test-presubmit
+      always_run: true
+      decorate: false
+      spec:
+        containers:
+          - image: alpine
+            command: ["/bin/printenv"]

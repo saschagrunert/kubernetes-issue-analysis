@@ -1,0 +1,30 @@
+---
+triggers:
+  - repos:
+      - saschagrunert/kubernetes-analysis
+
+approve:
+  - repos:
+      - saschagrunert/kubernetes-analysis
+    require_self_approval: false
+    lgtm_acts_as_approve: true
+
+lgtm:
+  - repos:
+      - saschagrunert/kubernetes-analysis
+    review_acts_as_lgtm: true
+
+plugins:
+  saschagrunert/kubernetes-analysis:
+    - approve
+    - assign
+    - help
+    - hold
+    - label
+    - lgtm
+    - lifecycle
+    - release-note
+    - retitle
+    - size
+    - trigger
+    - wip
