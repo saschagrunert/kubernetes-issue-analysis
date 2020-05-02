@@ -105,7 +105,7 @@ spec:
         cp -r /tmp/inputs/input-1/data data/api.tar.xz
         cp -r /tmp/inputs/input-2/data .update
         cp -r /tmp/inputs/input-3/data data/data.tar.xz
-        cp -r /tmp/inputs/input-4/data assets
+        cp -r /tmp/inputs/input-4/data assets/*.svg
         cp -r /tmp/inputs/input-5/data data/vectorizer.pickle
         cp -r /tmp/inputs/input-6/data data/selector.pickle
         cp -r /tmp/inputs/input-7/data data/model.h5
@@ -358,8 +358,8 @@ spec:
         echo "git diff:"
         git diff --name-only
         make assets
-        mkdir -p /out
-        cp -r assets /out/assets
+        mkdir -p /out/assets
+        cp -r assets/*.svg /out/assets/*.svg
       command: [bash, -c]
       image: quay.io/saschagrunert/kubernetes-analysis:latest
       imagePullPolicy: Always
@@ -375,7 +375,7 @@ spec:
       artifacts:
       - {name: mlpipeline-ui-metadata, path: /out/mlpipeline-ui-metadata.json}
       - {name: mlpipeline-metrics, path: /out/mlpipeline-metrics.json}
-      - {name: update-assets-assets, path: /out/assets}
+      - {name: update-assets-assets, path: /out/assets/*.svg}
     volumes:
     - name: github-token
       secret: {secretName: github-token}

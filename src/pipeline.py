@@ -89,7 +89,7 @@ class Pipeline(Cli):
             "update-assets",
             "make assets",
             inputs=[repo, data],
-            outputs={"assets": "assets"})
+            outputs={"assets": "assets/*.svg"})
         update_assets.after(update_data)
         assets = update_assets_outputs["assets"]
 
