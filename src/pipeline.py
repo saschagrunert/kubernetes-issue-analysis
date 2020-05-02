@@ -89,7 +89,7 @@ class Pipeline(Cli):
             "update-assets",
             "make assets",
             inputs=[repo, data],
-            outputs={"assets": "assets/*.svg"})
+            outputs={"assets": "assets"})
         update_assets.after(update_data)
         assets = update_assets_outputs["assets"]
 
@@ -137,6 +137,7 @@ class Pipeline(Cli):
         commit, _ = Pipeline.container(
             "commit-changes",
             dedent("""
+              mv assets/data/*.svg assets/
               git add .
               git commit -m "Update data" || true
               if [[ -z "{}" ]]; then
