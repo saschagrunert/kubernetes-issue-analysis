@@ -10,6 +10,7 @@ from loguru import logger
 
 from .cli import Cli
 from .data import Data
+from .export import Export
 from .nlp import Nlp
 
 
@@ -65,7 +66,7 @@ class Pipeline(Cli):
             inputs=[repo],
             outputs={
                 "api": Data.API_DATA_TARBALL,
-                "update-file": ".update",
+                "update-file": Export.API_UPDATE_FILE,
             })
         api = update_api_outputs["api"]
         update_file = update_api_outputs["update-file"]
