@@ -143,7 +143,8 @@ class Pipeline(Cli):
               fi
             """.format(pr)),
             inputs=[
-                repo, api, update_file, data, assets, vectorizer, selector, model, pipe
+                repo, api, update_file, data, assets, vectorizer, selector,
+                model, pipe
             ],
         )
         commit.after(build_pipeline)
