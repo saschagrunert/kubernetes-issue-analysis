@@ -65,8 +65,10 @@ class Pipeline(Cli):
             inputs=[repo],
             outputs={
                 "api": Data.API_DATA_TARBALL,
+                "update-file": ".update",
             })
         api = update_api_outputs["api"]
+        update_file = update_api_outputs["update-file"]
         update_api.after(checkout)
 
         # Udpate the training data from the API
@@ -141,7 +143,7 @@ class Pipeline(Cli):
               fi
             """.format(pr)),
             inputs=[
-                repo, api, data, assets, vectorizer, selector, model, pipe
+                repo, api, update_file, data, assets, vectorizer, selector, model, pipe
             ],
         )
         commit.after(build_pipeline)
