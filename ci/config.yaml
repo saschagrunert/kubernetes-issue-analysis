@@ -45,7 +45,6 @@ periodics:
   - name: data-update
     interval: 24h
     decorate: false
-    always_run: true
     spec:
       <<: *volumes
       containers:
@@ -81,10 +80,9 @@ presubmits:
               - |
                 set -euox pipefail
 
-                mkdir repo
-                pushd repo
-                git init
+                mkdir repo && pushd repo && git init
                 REPO=kubernetes-analysis
+
                 git remote add origin https://github.com/$REPO/$REPO
                 git fetch --depth=1 origin pull/$PULL_NUMBER/head:$PULL_NUMBER
                 git checkout $PULL_NUMBER
@@ -104,10 +102,9 @@ presubmits:
               - |
                 set -euox pipefail
 
-                mkdir repo
-                pushd repo
-                git init
+                mkdir repo && pushd repo && git init
                 REPO=kubernetes-analysis
+
                 git remote add origin https://github.com/$REPO/$REPO
                 git fetch --depth=1 origin pull/$PULL_NUMBER/head:$PULL_NUMBER
                 git checkout $PULL_NUMBER
