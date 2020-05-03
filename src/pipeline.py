@@ -43,7 +43,8 @@ class Pipeline(Cli):
                 git clone --depth=1 git@github.com:{repo}/{repo}
                 pushd {repo}
                 if [[ -n "{pr}" ]]; then
-                    curl -L https://{repo}/{repo}/pull/{pr}.patch > ../pr.patch
+                    curl -L https://github.com/{repo}/{repo}/pull/{pr}.patch \
+                        > ../pr.patch
                     git apply ../pr.patch
                 fi
                 popd
