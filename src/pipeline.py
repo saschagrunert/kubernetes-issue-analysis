@@ -1,10 +1,13 @@
+import json
 import os
 from textwrap import dedent
 from typing import Any, Dict, List, Optional, Tuple
 
 from kfp.compiler import Compiler
-from kfp.dsl import ContainerOp, InputArgumentPath, pipeline
+from kfp.dsl import (VOLUME_MODE_RWM, ContainerOp, InputArgumentPath,
+                     ResourceOp, VolumeOp, pipeline)
 from kubernetes import client as k8s
+from kubernetes.client import V1Volume
 from loguru import logger
 
 from .cli import Cli
@@ -37,6 +40,22 @@ class Pipeline(Cli):
     @staticmethod
     @pipeline(name="Kubernetes Analysis")
     def __run(pr: str = "", commit: str = ""):
+
+        vop = VolumeOp(name="create-katib-pvc",
+                       resource_name="katib-pvc",
+                       modes=VOLUME_MODE_RWM,
+                       size="1Gi")
+
+        test_ctr, _ = Pipeline.container("tune-hyperparameters",
+                                         dedent("""
+                ls -lah /mnt
+                kubectl get pods
+                sleep 5
+            """),
+                                         pvolumes={"/mnt": vop.volume})
+
+        return
+
         # Checkout the source code
         checkout, checkout_outputs = Pipeline.container("checkout",
                                                         dedent("""
@@ -188,6 +207,7 @@ class Pipeline(Cli):
         arguments: str,
         inputs: Optional[List[Tuple[InputArgumentPath, str]]] = None,
         outputs: Optional[Dict[str, str]] = None,
+        pvolumes: Dict[str, V1Volume] = None,
     ) -> Tuple[ContainerOp, Dict[str, Tuple[InputArgumentPath, str]]]:
         # Set the correct shell parameters
         prepare_args = "set -euo pipefail\n"
@@ -217,6 +237,7 @@ class Pipeline(Cli):
             file_outputs=file_outputs,
             artifact_argument_paths=[InputArgumentPath(x[0])
                                      for x in inputs] if inputs else None,
+            pvolumes=pvolumes,
         )
         ctr.container.set_image_pull_policy("Always")
 
@@ -284,6 +305,17 @@ class Pipeline(Cli):
             k8s.V1VolumeMount(name=ssh_key,
                               read_only=True,
                               mount_path="/root/.ssh"))
+
+        # Kubeconfig
+        kubeconfig = "kubeconfig"
+        ctr.add_volume(
+            k8s.V1Volume(name=kubeconfig,
+                         secret=k8s.V1SecretVolumeSource(
+                             default_mode=0o600, secret_name=kubeconfig)))
+        ctr.container.add_volume_mount(
+            k8s.V1VolumeMount(name=kubeconfig,
+                              read_only=True,
+                              mount_path="/root/.kube"))
 
         # Assemble the inputs for the next stage
         consumable_inputs = {}
